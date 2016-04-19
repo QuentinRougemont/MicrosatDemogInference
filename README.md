@@ -1,7 +1,7 @@
 # DemographicInference
 Contains  Script To performed Demographic inference using microsatelittes data with coalescent theory, ABC model selection and parameter estimation. I also explore the use of Random Forest for model selection.
 All R scripts for simulating data and convertion into R were modified from previous developpement by Illera et al. (2014).
-Original script can be found here:
+Original script made by M. Nasvascues can be found here:
 https://www.researchgate.net/publication/273445598_ABCSylvia
 
 Ref: 

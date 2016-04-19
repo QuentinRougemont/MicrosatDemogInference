@@ -6,7 +6,7 @@
 #This pipeline contains scripts to compare models of speciation using coalescent theory, abc model selection and parameter estimation. It also explore (very quickly) the use of random forest for 
 #model selection as an alertnative to the classical ABC model choice procedure.
 #All R scripts for simulating data and convertion into R were modified from previous developpement by Illera et al. (2014).
-#Original script can be found here:
+#Original script developped by M. Navascues can be found here:
 #https://www.researchgate.net/publication/273445598_ABCSylvia
 
 #References: 

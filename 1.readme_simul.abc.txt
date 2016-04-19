@@ -3,8 +3,18 @@
 ###Quentin Rougemont: quentinrougemont@orange.fr
 ##################################################################################
 
-#This pipeline contains scripts to compare models of speciation using coalescent theory, abc model selection and parameter estimation. It also explorer (very quickly) the use of random forest for 
+#This pipeline contains scripts to compare models of speciation using coalescent theory, abc model selection and parameter estimation. It also explore (very quickly) the use of random forest for 
 #model selection as an alertnative to the classical ABC model choice procedure.
+#All R scripts for simulating data and convertion into R were modified from previous developpement by Illera et al. (2014).
+#Original script can be found here:
+#https://www.researchgate.net/publication/273445598_ABCSylvia
+
+#References: 
+Illera, J. C., A. M. Palmero, P. Laiolo, F. Rodríguez, Á. C. Moreno, and M. Navascués. 2014. Genetic, Morphological and Acoustic Evidence Reveals Lack of Diversification in the Colonization Process in an Island Bird. Evolution Volume 68, Issue 8, pages 2259-2274.
+DOI: 10.1111/evo.12429
+
+Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016. Reconstructing the demographic history of divergence between European river and brook lampreys using approximate Bayesian computations. PeerJ 4:e1910 https://doi.org/10.7717/peerj.1910
+
 # to perform an abc analysis you'll have to:
 #1. Run coalescent simulation with the Simul_*_parralel.R script (located in the enclosed folder) and submist_abc.sh script (or any other script you want to use for submit mutliple jobs in parallel)
 #2. Reshape the simulation in a single file

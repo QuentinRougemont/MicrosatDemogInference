@@ -52,7 +52,7 @@ for i in `seq 1 100` ; do echo -e "cd ../JOB.$i\nqsub SimulModelName" >> soumiss
 ########### Reshape file ################
 
 #When the simulation are done you can reshape the 100 output to merge them in a single file without header as follows:	
-for z in AM I IM SC PAN ; do for i in AA BET BRE HEM OIR RIS ; do  find ($z/$i -name reference.table.txt) ; cat *txt |grep -v 'model' > $i.$z.txt ; done;  done 
+for z in AM I IM SC PAN ; do for i in AA BET BRE HEM OIR RIS ; do for k in  $(find $z/$i -name reference.table.txt); do cat $k |grep -v 'model' >> $i.$z.txt ; done;  done 
 #Edit: I am running into a precise architecture of folder as follows: AM IM SC PAN I are the name of the folder containing simulations, these 5 folder then contains 6 folders for each populations pairs
 #There is many other way to process of course and these are just guidelines
 
@@ -66,4 +66,3 @@ for z in AM I IM SC PAN ; do for i in AA BET BRE HEM OIR RIS ; do  find ($z/$i -
 #Follow guidline in the R script 
 #Note that there is several ways to perform RF analysis in R, the main diffuclty being to find a library that will be adaptated to use large matrices such as those produced by coalescent simulations
 #Alternatively I would recommanded to have a look at the abcfr packages recently developped (Marin et al. 2015) and older paper by the same authors
-

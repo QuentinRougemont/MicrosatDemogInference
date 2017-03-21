@@ -1,0 +1,68 @@
+##################################################################################
+###Important information to perform simulations, abc analysis and random forest
+###Quentin Rougemont: quentinrougemont@orange.fr
+##################################################################################
+
+#This pipeline contains scripts to compare models of speciation using coalescent theory, abc model selection and parameter estimation. It also explore (very quickly) the use of random forest for 
+#model selection as an alertnative to the classical ABC model choice procedure.
+#All R scripts for simulating data and convertion into R were modified from previous developpement by Illera et al. (2014).
+#Original script developped by M. Navascues can be found here:
+#https://www.researchgate.net/publication/273445598_ABCSylvia
+
+#References: 
+Illera, J. C., A. M. Palmero, P. Laiolo, F. Rodríguez, Á. C. Moreno, and M. Navascués. 2014. Genetic, Morphological and Acoustic Evidence Reveals Lack of Diversification in the Colonization Process in an Island Bird. Evolution Volume 68, Issue 8, pages 2259-2274.
+DOI: 10.1111/evo.12429
+
+Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016. Reconstructing the demographic history of divergence between European river and brook lampreys using approximate Bayesian computations. PeerJ 4:e1910 https://doi.org/10.7717/peerj.1910
+
+# to perform an abc analysis you'll have to:
+#1. Run coalescent simulation with the Simul_*_parralel.R script (located in the enclosed folder) and submist_abc.sh script (or any other script you want to use for submit mutliple jobs in parallel)
+#2. Reshape the simulation in a single file
+#3. Run the abc analysis
+#4. You can perform Random-Forest for model Selection using either my own script or the recently developped package abcrf.
+
+###############################################
+#### Running Simulation #######################
+
+# 1. Read careffully the 5 scripts for each model 
+# to be able to use them you'll need a linux cluster, otherwise it'll take several weeks or months
+# I have decided to split the 5 model in 5 script for faster parallelisation
+# I run 10 000 simulations * 100 making the 1 milion simulations needed.
+# to do so, there is several possibililties, one is to use the provided "submit_abc.sh" script 
+# this script will allow you to submit 100 simulation in a single line 
+#WARNING: the script has to be adapted to your cluster machine especially line 35 you need to inform the name of the queue (here "unlimitq") but it may be different on your cluster
+#then the script runs simply with the following commands:
+./submit_abc.sh -i test --files 'SimulAM_parallel.R pop1aa pop2aa' --name SimulAM.test -n 100
+
+#the -i option as no meaning here but a random name must be given
+#the --files option provides files names
+#the --name option is the name to be given to the simulation
+#the -n option set the number of replicates
+
+#Instead of the "submit_abc.sh" script you can use several other way to perform parallelisation.
+#For instance simply create 100 folder (for i in `seq 1 100` ; do  mkdir JOB.$i ; done )
+#Copy the approrpiate files
+#Create a qsub commande line that will be adapted to your cluster machine (for my cluster I simply run this):
+echo "R CMD BATCH "Simul_MODEL_NAME.R" > SimulModelName 
+#then copy all appropriate files (the SimulModelName, the R script and the genotype data) in the 100 subfolder
+#then in a simple loop in bash like "
+for i in `seq 1 100` ; do echo -e "cd ../JOB.$i\nqsub SimulModelName" >> soumission_job ; done
+#then copy and paste the line from the soumission_job file in your terminal to submit the job
+
+########### Reshape file ################
+
+#When the simulation are done you can reshape the 100 output to merge them in a single file without header as follows:	
+for z in AM I IM SC PAN ; do for i in AA BET BRE HEM OIR RIS ; do for k in  $(find $z/$i -name reference.table.txt); do cat $k |grep -v 'model' >> $i.$z.txt ; done;  done 
+#Edit: I am running into a precise architecture of folder as follows: AM IM SC PAN I are the name of the folder containing simulations, these 5 folder then contains 6 folders for each populations pairs
+#There is many other way to process of course and these are just guidelines
+
+#######################################################
+##############  Run the abc analysis #################
+# you'll simply need the R script provided here and careffully follow the script (ABC_analysis.R)
+#you'll have to customize the script and use some R or bash programming to automatically perform cross-validations.
+
+############################################################################
+############" Run the Random Forest for Model Selection ####################
+#Follow guidline in the R script 
+#Note that there is several ways to perform RF analysis in R, the main diffuclty being to find a library that will be adaptated to use large matrices such as those produced by coalescent simulations
+#Alternatively I would recommanded to have a look at the abcfr packages recently developped (Marin et al. 2015) and older paper by the same authors

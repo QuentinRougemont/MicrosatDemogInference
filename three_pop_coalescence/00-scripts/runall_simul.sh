@@ -18,12 +18,13 @@ p03=$(msub  "$SCRIPTPATH"/models/model_job_array.1c.sh  | tail -n 1 | awk '{prin
 #p03=$(msub  "$SCRIPTPATH"/models/model_job_array.3.sh  | tail -n 1 | awk '{print $1}')  #sc 
 #p04=$(msub  "$SCRIPTPATH"/models/model_job_array.4.sh  | tail -n 1 | awk '{print $1}')  #am 
 
+00-scripts/04.paramestim.si.3pop.sh si.simul.ber.ABC.txt  pop6ber pop1den pop5cov
 #reshape the simul and process to model choice
 s01=$(msub -l depend=$p01:$p02:$p03:$p04:$p05:$p06:$p07 "$SCRIPTPATH"/00.reshape.sh | tail -n 1 | awk '{print $1}')
-#s02=$(msub -l depend=$s01 "$SCRIPTPATH"/01.model.selection.sh   | tail -n 1 | awk '{print $1}')
-#s03=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.si.all.sh | tail -n 1 | awk '{print $1}')
-#s04=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.im.all.sh | tail -n 1 | awk '{print $1}')
-#s05=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.sc.all.sh | tail -n 1 | awk '{print $1}')
+s02=$(msub -l depend=$s01 "$SCRIPTPATH"/01.model.selection3pops.si.sh   | tail -n 1 | awk '{print $1}')
+s03=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.si.3pop.sh si.simul.ber.ABC.txt  pop6ber pop1den pop5cov | tail -n 1 | awk '{print $1}')
+s04=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.si.3pop.sh si.simul.cov.ABC.txt  pop5cov pop6ber pop1den | tail -n 1 | awk '{print $1}')
+s04=$(msub -l depend=$s01 "$SCRIPTPATH"/04.paramestim.si.3pop.sh si.simul.den.ABC.txt  pop1den pop6ber pop5cov | tail -n 1 | awk '{print $1}')
 #s06=$(msub -l depend=$s04 "$SCRIPTPATH"/02.robustess.sh         | tail -n 1 | awk '{print $1}')
 #s07=$(msub -l depend=$s04 "$SCRIPTPATH"/02.robustess_sc.sh      | tail -n 1 | awk '{print $1}')
 #s08=$(msub -l depend=$s04 "$SCRIPTPATH"/02.robustess_im.sh      | tail -n 1 | awk '{print $1}')

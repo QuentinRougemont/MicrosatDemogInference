@@ -15,11 +15,15 @@ module load compilers/gcc/4.8.5 apps/mugqic_pipeline/2.1.1 mugqic/mugqic_R_packa
 
 cd ./02-results
 
-model="si.simul.den.ABC.txt"
-pop1="den"
-pop2="ber"
-pop3="cov"
+model=$1 #"si.simul.den.ABC.txt"
+pop1=$2 #"den"
+pop2=$3 #"ber"
+pop3=$4 #"cov"
 Rscript ../00-scripts/rscript/03.param.estim.si.3pop.R "$model" "$pop1" "$pop2" "$pop3"
 
-wait
-sleep 30
+#model="si.simul.den.ABC.txt"
+#pop1="den"
+#pop2="ber"
+#pop3="cov"
+#Rscript ../00-scripts/rscript/03.param.estim.si.3pop.R "$model" "$pop1" "$pop2" "$pop3"
+

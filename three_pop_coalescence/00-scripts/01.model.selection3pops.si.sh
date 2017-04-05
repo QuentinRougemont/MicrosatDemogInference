@@ -16,11 +16,12 @@ module load compilers/gcc/4.8.5 apps/mugqic_pipeline/2.1.1 mugqic/mugqic_R_packa
 
 #working dir
 cd ./02-results
-model1="si.simul.ABC.txt"
-model2="si.simul.cov.ABC.txt"
-model3="si.simul.ber.ABC.txt" 
-model_type="si" #type of model (si or im)
-Rscript ../00-scripts/rscript/01.model.choice3pops.R "$model1" "$model2" "$model3" "$model_type"
+model_type="si"
+model1="si.simul.den.ABC.txt"
+model2="si.simul.ber.ABC.txt"
+model3="si.simul.cov.ABC.txt" 
+#model4="im.simul.mig_C.ABC.txt"
+Rscript ../00-scripts/rscript/01.model.choice3pops.R "$model_type" "$model1" "$model2" "$model3" # "$model4"
 
 wait
 sleep 30

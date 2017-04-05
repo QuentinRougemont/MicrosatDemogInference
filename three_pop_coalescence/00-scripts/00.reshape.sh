@@ -19,7 +19,7 @@ target=1000000 #set the number of wanted simulations
 ls -d 02-results/*/ | sed -e 's/\([0-9]*\)//g' -e 's/._\///g'  -e 's/-results\///g' |uniq > list
 
 for j in $(cat list) ; do mkdir 02-results/$j.glob ; done 
-for j in  $(cat list) ; do mv 02-results/$j.* 02-results/$j.glob ; done 
+for j in  $(cat list) ; do mv 02-results/$j* 02-results/$j.glob ; done 
 for i in $(cat list) ; do for k in $(find 02-results/$i.glob -name reference_table.txt) ; do cat $k |grep -v model >> 02-results/$i.ABC.txt ; done ; done  
 sed -i '/^$/d' 02-results/*.ABC.txt 
 for i in $(head -n 1 list) ; do for k in $(find 02-results/$i.glob -name  target_sumstats.txt ); do cp $k 02-results/ ; done ; done 

@@ -1,7 +1,24 @@
 
+#purpose = "run coalescent simulation using ms for microsatellite data for a 3population model"
+#date    = "06/04/2017"
+#authors =  "Quentin Rougemont, M. Navascues"
+#output  = "file of empirically observed statistics (target_sumstats.txt ) and reference table of coalescent sims.(reference_table.txt)"
+
 library(pegas)
 
 argv  <- commandArgs(TRUE)
+
+if (argv[1]=="-h" || length(argv)==0){
+        cat("\n 8 parameter needed!! \n  
+	(1) pop1 (genotype data for pop1) \n, 
+	(2) pop2 (genotype data for pop2) \n, 
+	(3) pop3 (genotype data for pop3) \n 
+	(4) nsim (number of simulation), (5) nloc (number of loci)\n 
+	(6) pattern of repeat motif for each loci (a single colomn file with one motif on each ligne) \n 
+	(7) migration_model (for migration matrix) \n 
+	(8) model_type(either im or si)  \n" )
+}else{
+
 pop1  <- argv[1]
 pop2  <- argv[2]
 pop3  <- argv[3]
@@ -10,6 +27,7 @@ nloc  <- as.numeric(argv[5])
 motif <- argv[6]
 mig_model  <- argv[7]
 model_type <- argv[8]
+}
 
 nsim  <- nsim
 add_simulations <- F
@@ -21,9 +39,11 @@ batch <- 1
 source("../../00-scripts/msdir/readms.output.R")
 #source("/home/ubuntu/programmation/R/ABC/msdir/readms.output.R")
 
+### READ DATA ###
 # Data input file consist on a text file for each population which contains allele data (size in base pairs)
 # loci in columns
 # gene copies (gene copies = 2 * number of individuals) in rows
+
 data_pop1 <- read.table(pop1)
 data_pop2 <- read.table(pop2)
 data_pop3 <- read.table(pop3)
@@ -176,6 +196,25 @@ deltamu1_3  <- array(NA,number_of_loci)
 deltamu2_3  <- array(NA,number_of_loci)
 #deltamu2  <- array(NA,number_of_loci)
 
+#declare all necessary function
+#Het <- function(x)
+#{
+ #   n <- length(x)
+  #  f <- table(x)/n
+  #  p <- sum(f^2)
+  #  Het <- n * (1 - p) / (n - 1)
+  #return(Het)
+#}
+
+#Fis=1-Ho/Hs
+#Dst=Ht-Hs
+#Fst=Dst/Ht
+#np = number of pop = 2
+#Dst'=np/(np-1)Dst
+#Ht'=Hs+Dst'
+#Fst'=Dst'/Ht'
+#Dest=np/(np-1) (Ht'-Hs)/(1-Hs) #jost D
+
 for (locus in 1:number_of_loci){
   H_pop1[locus]  <- H(as.factor(data_pop1[,locus])) # 
   H_pop2[locus]  <- H(as.factor(data_pop2[,locus])) #
@@ -293,6 +332,7 @@ write.table( cbind( mean_H_pop1,   var_H_pop1,
 file="target_sumstats.txt",sep=" ",
 quote=F,col.names=F,row.names=F,append=T)
 
+cat("empirical statistics succesfully computed :)" )
 ###################################
 #Prepare ref.table for simulation #
 ##################################
@@ -361,7 +401,7 @@ if (!add_simulations){
 
 for(i in 1:nsim){
    
-  thetaRef=0.05 #hypothèse: Ne=1000 mu=1.25*10^-5
+  thetaRef=0.5 #hypothèse: Ne=1000 mu=1.25*10^-5
   theta1_min <- 0 
   theta1_max <- 30 
 

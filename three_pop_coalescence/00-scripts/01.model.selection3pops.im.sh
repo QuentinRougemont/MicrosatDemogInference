@@ -14,8 +14,17 @@ cd $PBS_O_WORKDIR
 
 module load compilers/gcc/4.8.5 apps/mugqic_pipeline/2.1.1 mugqic/mugqic_R_packages/0.1_R_3.2.0
 
+#working dir
 cd ./02-results
-Rscript ../00-scripts/rscript/01.model.choice.R im.simul.ABC.txt si.simul.ABC.txt sc.simul.ABC.txt  am.simul.ABC.txt
+model_type="im_si"
+model1="si.simul.ber.ABC.txt"
+#model2="im.simul.mig.A.ABC.txt"
+model2="im.simul.full.ABC.txt"
+model2="im.simul.mig.C.ABC.txt"
+#model3="im.simul.mig.B.ABC.txt" 
+#model4="im.simul.mig.C.ABC.txt"
+
+Rscript ../00-scripts/rscript/01.model.choice3pops.im.R "$model_type" "$model1" "$model2" #"$model3" "$model4"
 
 wait
 sleep 30

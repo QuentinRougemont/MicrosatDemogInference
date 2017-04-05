@@ -14,7 +14,7 @@ cd "${PBS_O_WORKDIR}"
 
 # Folder to run simulations
 MODEL=./00-scripts/models/model.2.sh
-FOLDER=./02-results/im.simul.$MOAB_JOBARRAYINDEX
+FOLDER=./02-results/im.simul.full.$MOAB_JOBARRAYINDEX
 
 for i in $(seq 8)
 do

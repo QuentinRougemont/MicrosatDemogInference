@@ -1,16 +1,14 @@
 Whole pipeline to perform demographic inference using 3populations
 
-Currently implements the Strict Isolation ```SI``` and Isolation w Migration ```IM``` models. I will certainly add Ancient Migration ```AM``` and Secondary Contact ```SC``` models one day.
-
+Currently implements the Strict Isolation and Isolation w Migration models
 Allows to compare different topologies and SI and all possible direction of migration in IM.
-
 Rscript for ```model selection``` still beta 
 
 Will update more soon....
 
 the full coalescence pipeline is in ```Simul_full_3pop.R```
 
-Models are specified in the ```models folder``` folder and are all parallelised to run on clusters of CPU
+Models are specified in the ```models``` folder and are all parallelised to run on clusters of CPU
 
 One can run many more models by creating new ```model.*.sh``` and ```model_job_array*.sh``` files according to its needs
 

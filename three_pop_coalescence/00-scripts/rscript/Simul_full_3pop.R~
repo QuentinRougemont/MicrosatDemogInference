@@ -196,7 +196,25 @@ deltamu1_3  <- array(NA,number_of_loci)
 deltamu2_3  <- array(NA,number_of_loci)
 #deltamu2  <- array(NA,number_of_loci)
 
-#Compute statistics:
+#declare all necessary function
+#Het <- function(x)
+#{
+ #   n <- length(x)
+  #  f <- table(x)/n
+  #  p <- sum(f^2)
+  #  Het <- n * (1 - p) / (n - 1)
+  #return(Het)
+#}
+
+#Fis=1-Ho/Hs
+#Dst=Ht-Hs
+#Fst=Dst/Ht
+#np = number of pop = 2
+#Dst'=np/(np-1)Dst
+#Ht'=Hs+Dst'
+#Fst'=Dst'/Ht'
+#Dest=np/(np-1) (Ht'-Hs)/(1-Hs) #jost D
+
 for (locus in 1:number_of_loci){
   H_pop1[locus]  <- H(as.factor(data_pop1[,locus])) # 
   H_pop2[locus]  <- H(as.factor(data_pop2[,locus])) #

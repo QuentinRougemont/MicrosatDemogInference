@@ -9,3 +9,20 @@ Illera, J. C., A. M. Palmero, P. Laiolo, F. Rodríguez, Á. C. Moreno, and M. Na
 available here: http://onlinelibrary.wiley.com/doi/10.1111/evo.12429/full
 
 Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016. Reconstructing the demographic history of divergence between European river and brook lampreys using approximate Bayesian computations. PeerJ 4:e1910 https://doi.org/10.7717/peerj.1910
+
+## Dependencies
+
+```ms``` coalescent simulator from hudson available at [download ms](https://uchicago.app.box.com/s/l3e5uf13tikfjm7e1il1eujitlsjdx13)
+
+## R dependencies :
+```pegas``` packages
+
+## Recent update : 
+ implemented a 3 pops colaescent derivation of our two population models for Isolation w. Migration (IM) or Strict Isolation (SI)
+
+##Original implementation
+Allows the comparaison of 4 models of population divergence namely 
+* SI (Strict Isolation) , 
+* Isolation with Migration (IM), 
+* Ancient Migration (AM) and 
+* Secondary Contact (SC)

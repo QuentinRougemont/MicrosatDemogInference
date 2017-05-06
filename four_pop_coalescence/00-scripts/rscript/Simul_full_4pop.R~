@@ -45,6 +45,17 @@ source("../../00-scripts/msdir/readms.output.R")
 # loci in columns
 # gene copies (gene copies = 2 * number of individuals) in rows
 
+
+pop1="pop1al_atltant"
+ pop2="af_atl"
+ pop3="pop1af_rhone"
+ pop3="af_corse"
+ pop3="pop1af_rhone"
+ pop4="af_corse"
+motif="repeat.motif"
+model_type="im"
+mig_model="234_432"
+
 data_pop1 <- read.table(pop1)
 data_pop2 <- read.table(pop2)
 data_pop3 <- read.table(pop3)
@@ -249,6 +260,11 @@ A <- function(x)
 	return(A)
 }
 
+Ar <- function(x,y,z) 
+{
+	Ar <-sum(1 - choose(y-table(x),min(z))/chosse(y,z)
+	return(Ar)
+}    
 V <- function(x,y) #y = sample_size
 {
 	V < var(x)
@@ -268,6 +284,11 @@ HV <- function(x) #y = sample_size
 {
 	HV <- H(x)/V(x)
 	return(HV)
+} 
+Fis <- function(x) #y = sample_size
+{
+	Fis <-1-H(x)/He(x)
+	return(Fis)
 } 
 Gst <- function(x,y,z)
 {
@@ -326,6 +347,12 @@ for (locus in 1:number_of_loci){
   #A_pop4[locus]  <- length(levels(as.factor(data_pop4[,locus]))) #
   #A_total[locus] <- length(levels(as.factor(data_total[,locus]))) #
 
+  Ar_pop1[locus]  <-Ar(sample_size_pop1[locus],as.factor(data_pop1[,locus]),min.n.pop1)
+  Ar_pop2[locus]  <-Ar(sample_size_pop2[locus],as.factor(data_pop2[,locus]),min.n.pop2)
+  Ar_pop3[locus]  <-Ar(sample_size_pop3[locus],as.factor(data_pop3[,locus]),min.n.pop3)
+  Ar_pop4[locus]  <-Ar(sample_size_pop4[locus],as.factor(data_pop4[,locus]),min.n.pop4)
+  Ar_total[locus] <-Ar(sample_size_total[locus],as.factor(data_total[,locus]),min.n.total)
+ 
   Ar_pop1[locus]  <-sum(1-choose(sample_size_pop1[locus]-table(as.factor(data_pop1[,locus])),min.n.pop1)/choose(sample_size_pop1[locus],min.n.pop1)) #
   Ar_pop2[locus]  <-sum(1-choose(sample_size_pop2[locus]-table(as.factor(data_pop2[,locus])),min.n.pop2)/choose(sample_size_pop2[locus],min.n.pop2)) #
   Ar_pop3[locus]  <-sum(1-choose(sample_size_pop3[locus]-table(as.factor(data_pop3[,locus])),min.n.pop3)/choose(sample_size_pop3[locus],min.n.pop3)) #

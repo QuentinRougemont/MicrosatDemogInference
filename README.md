@@ -1,7 +1,7 @@
 # DemographicInference
 Contains  Script To perform Demographic inference using microsatelittes data: 
 based on :
-* coalescent simulation usgin ``ms``` 
+* coalescent simulation usgin ```ms``` 
 * ABC model selection and parameter estimation. 
 * RandomForest model selection 
 
@@ -16,7 +16,7 @@ Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016
 
 ## Dependencies
 
-```ms``` coalescent simulator from hudson available at [download ms](https://uchicago.app.box.com/s/l3e5uf13tikfjm7e1il1eujitlsjdx13)
+```ms``` coalescent simulator from hudson available  [here](https://uchicago.app.box.com/s/l3e5uf13tikfjm7e1il1eujitlsjdx13)
 
 ## R dependencies :
 ```pegas``` packages
@@ -25,6 +25,10 @@ Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016
 ## Recent update : 
  implemented a ```3 pops``` colaescent derivation of our two population models for:
 * Isolation w. Migration (IM) 
+* Strict Isolation (SI)
+
+started implementing a ```4 pops``` colaescent derivation for:
+* Isolation w. Migration (IM) (with several possible configurations for directions and symetries of introgression) 
 * Strict Isolation (SI)
 
 ## Original implementation :

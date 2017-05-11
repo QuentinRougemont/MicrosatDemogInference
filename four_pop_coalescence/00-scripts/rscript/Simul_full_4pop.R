@@ -1,7 +1,9 @@
 
 #purpose = "run coalescent simulation using ms for microsatellite data for a 4population model"
 #date    = "05/05/2017"
-#authors =  "Quentin Rougemont, M. Navascues"
+#authors =  "Quentin Rougemont"
+#modification from the original 2 pop scripts developped by M. Navascues
+#Here allows to compare different rates and direction of migration (im model) and to compare against a model without migration
 #output  = "file of empirically observed statistics (target_sumstats.txt ) and reference table of coalescent sims.(reference_table.txt)"
 
 library(pegas)
@@ -10,15 +12,15 @@ argv  <- commandArgs(TRUE)
 
 if (argv[1]=="-h" || length(argv)==0){
         cat("\n 8 parameter needed!! \n  
-	(1) pop1 (genotype data for pop1) \n, 
-	(2) pop2 (genotype data for pop2) \n, 
-	(3) pop3 (genotype data for pop3) \n 
-	(4) pop3 (genotype data for pop3) \n 
+    (1) pop1 (genotype data for pop1) \n, 
+    (2) pop2 (genotype data for pop2) \n, 
+    (3) pop3 (genotype data for pop3) \n 
+    (4) pop3 (genotype data for pop4) \n 
     (5) nsim (number of simulation), \n 
     (6) nloc (number of loci)\n 
-	(7) pattern of repeat motif for each loci (a single colomn file with one motif on each ligne) \n 
-	(8) migration_model (for migration matrix) \n 
-	(9) model_type(either im or si)  \n" )
+    (7) pattern of repeat motif for each loci (a single colomn file with one motif on each ligne) \n 
+    (8) migration_model (for migration matrix) \n 
+    (9) model_type(either im or si)  \n" )
 }else{
 
 pop1  <- argv[1]
@@ -248,7 +250,11 @@ A <- function(x)
 	A <- length(levels(x))
 	return(A)
 }
-
+  Ar_pop1[locus]  <-sum(1-choose(sample_size_pop1[locus]-table(as.factor(data_pop1[,locus])),min.n.pop1)/choose(sample_size_pop1[locus],min.n.pop1)) #
+Ar <- function(x,y,z)
+{
+	Ar <- sum(1-choose(x-table(y),z)/choose(x,z))
+}
 V <- function(x,y) #y = sample_size
 {
 	V < var(x)
@@ -296,12 +302,6 @@ for (locus in 1:number_of_loci){
   He_pop3[locus]  <- He(as.factor(data_pop3[,locus])) # 
   He_pop4[locus]  <- He(as.factor(data_pop4[,locus])) # 
 
-  #He_pop1[locus] <- 1-sum((table(as.factor(data_pop1[,locus]))/sum(table(as.factor(data_pop1[,locus])),na.rm=T))^2) #
-  #He_pop2[locus] <- 1-sum((table(as.factor(data_pop2[,locus]))/sum(table(as.factor(data_pop2[,locus])),na.rm=T))^2) #
-  #He_pop3[locus] <- 1-sum((table(as.factor(data_pop3[,locus]))/sum(table(as.factor(data_pop3[,locus])),na.rm=T))^2) #
-  #He_pop4[locus] <- 1-sum((table(as.factor(data_pop4[,locus]))/sum(table(as.factor(data_pop4[,locus])),na.rm=T))^2) #
-  #He_total[locus] <- 1-sum((table(as.factor(data_total[,locus]))/sum(table(as.factor(data_total[,locus])),na.rm=T))^2) #           
-
   n_pop1[locus] <- length(which(!is.na(data_pop1[,locus])))
   Hs_pop1[locus] <- 1 - sum((table(as.factor(data_pop1[,locus]))/sum(table(as.factor(data_pop1[,locus])),na.rm=T))^2) - H_pop1[locus]/2/n_pop1[locus]
   Hs_pop1[locus] <- n_pop1[locus]/(n_pop1[locus]-1)*Hs_pop1[locus]
@@ -320,17 +320,11 @@ for (locus in 1:number_of_loci){
   A_pop3[locus]  <- A(as.factor(data_pop3[,locus]))
   A_pop4[locus]  <- A(as.factor(data_pop4[,locus]))
   A_total[locus]  <- A(as.factor(data_total[,locus]))
-  #A_pop1[locus]  <- length(levels(as.factor(data_pop1[,locus]))) #
-  #A_pop2[locus]  <- length(levels(as.factor(data_pop2[,locus]))) #
-  #A_pop3[locus]  <- length(levels(as.factor(data_pop3[,locus]))) #
-  #A_pop4[locus]  <- length(levels(as.factor(data_pop4[,locus]))) #
-  #A_total[locus] <- length(levels(as.factor(data_total[,locus]))) #
 
-  Ar_pop1[locus]  <-sum(1-choose(sample_size_pop1[locus]-table(as.factor(data_pop1[,locus])),min.n.pop1)/choose(sample_size_pop1[locus],min.n.pop1)) #
-  Ar_pop2[locus]  <-sum(1-choose(sample_size_pop2[locus]-table(as.factor(data_pop2[,locus])),min.n.pop2)/choose(sample_size_pop2[locus],min.n.pop2)) #
-  Ar_pop3[locus]  <-sum(1-choose(sample_size_pop3[locus]-table(as.factor(data_pop3[,locus])),min.n.pop3)/choose(sample_size_pop3[locus],min.n.pop3)) #
-  Ar_pop4[locus]  <-sum(1-choose(sample_size_pop4[locus]-table(as.factor(data_pop4[,locus])),min.n.pop4)/choose(sample_size_pop4[locus],min.n.pop4)) #
-  Ar_total[locus] <-sum(1-choose(sample_size_total[locus]-table(as.factor(data_total[,locus])),min.n.total)/choose(sample_size_total[locus],min.n.total)) #
+  Ar_pop1[locus]  <- Ar(sample_size_pop1[locus],as.factor(data_pop1[,locus]),min.n.pop1)
+  Ar_pop2[locus]  <- Ar(sample_size_pop2[locus],as.factor(data_pop2[,locus]),min.n.pop2)
+  Ar_pop3[locus]  <- Ar(sample_size_pop3[locus],as.factor(data_pop3[,locus]),min.n.pop3)
+  Ar_pop4[locus]  <- Ar(sample_size_pop4[locus],as.factor(data_pop4[,locus]),min.n.pop4)
 
   V_pop1[locus]  <- var(data_pop1[,locus]) #
   V_pop2[locus]  <- var(data_pop2[,locus]) #
@@ -485,7 +479,7 @@ if (!add_simulations){
     if(model_type=="im") { 
     cbind("mig12", "mig13", "mig14", "mig21", "mig31", "mig34","mig23", "mig32","mig24","mig42","mig34", "mig43")
     } else {},   
-    "tau_4_3","tau_3_2", "tau_2_1",, 
+    "tau_4_3","tau_3_2", "tau_2_1",
     # SUMMARY STATISTICS                      
     "mean_H_pop1",     "var_H_pop1",
     "mean_H_pop2",     "var_H_pop2",

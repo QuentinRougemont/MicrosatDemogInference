@@ -19,9 +19,9 @@ Rougemont, Q., C. Roux, S. Neuenschwander, J. Goudet, S. Launey, G. Evanno. 2016
 ```ms``` coalescent simulator from hudson available  [here](https://uchicago.app.box.com/s/l3e5uf13tikfjm7e1il1eujitlsjdx13)
 
 ## R dependencies :
-* ```pegas``` package more info [here](https://cran.r-project.org/web/packages/pegas/index.html)
-* ```abc``` package  more info [here](https://cran.r-project.org/web/packages/abc/index.html)
-* ```RandomForest SRC``` package more info [here](https://cran.r-project.org/web/packages/randomForestSRC/index.html)
+```pegas``` packages
+```abc``` packages
+```RandomForest SRC``` packages
 ## Recent update : 
  implemented a ```3 pops``` colaescent derivation of our two population models for:
 * Isolation w. Migration (IM) 

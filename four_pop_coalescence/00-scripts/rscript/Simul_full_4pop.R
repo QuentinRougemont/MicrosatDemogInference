@@ -250,7 +250,6 @@ A <- function(x)
 	A <- length(levels(x))
 	return(A)
 }
-  Ar_pop1[locus]  <-sum(1-choose(sample_size_pop1[locus]-table(as.factor(data_pop1[,locus])),min.n.pop1)/choose(sample_size_pop1[locus],min.n.pop1)) #
 Ar <- function(x,y,z)
 {
 	Ar <- sum(1-choose(x-table(y),z)/choose(x,z))

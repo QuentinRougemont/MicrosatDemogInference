@@ -21,4 +21,4 @@ NLOC=$( awk -F " " '{print NF }' $POP1  |head -1 )
 module load compilers/gcc/4.8.5 apps/mugqic_pipeline/2.1.1 mugqic/mugqic_R_packages/0.1_R_3.2.0
 
 # Launch Rscript
-Rscript ../../00-scripts/rscript/Simul_full_4pop.R "$POP1" "$POP2" "$POP3" "$POP4" "$NREPS" "$NLOC" "$repeat" "$model_type" "$mig_model"
+Rscript ../../00-scripts/rscript/Simul_full_4pop.R "$POP1" "$POP2" "$POP3" "$POP4" "$NREPS" "$NLOC" "$repeat" "$mig_model" "$model_type"

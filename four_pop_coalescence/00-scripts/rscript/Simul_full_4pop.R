@@ -2,7 +2,6 @@
 #purpose = "run coalescent simulation using ms for microsatellite data for a 4population model"
 #date    = "05/05/2017"
 #authors =  "Quentin Rougemont"
-#modification from the original 2 pop scripts developped by M. Navascues
 #Here allows to compare different rates and direction of migration (im model) and to compare against a model without migration
 #output  = "file of empirically observed statistics (target_sumstats.txt ) and reference table of coalescent sims.(reference_table.txt)"
 
@@ -303,6 +302,7 @@ for (locus in 1:number_of_loci){
   He_pop2[locus]  <- He(as.factor(data_pop2[,locus])) # 
   He_pop3[locus]  <- He(as.factor(data_pop3[,locus])) # 
   He_pop4[locus]  <- He(as.factor(data_pop4[,locus])) # 
+  He_total[locus] <- He(as.factor(data_total[,locus])) # 
 
   n_pop1[locus] <- length(which(!is.na(data_pop1[,locus])))
   Hs_pop1[locus] <- 1 - sum((table(as.factor(data_pop1[,locus]))/sum(table(as.factor(data_pop1[,locus])),na.rm=T))^2) - H_pop1[locus]/2/n_pop1[locus]
@@ -327,30 +327,38 @@ for (locus in 1:number_of_loci){
   Ar_pop2[locus]  <- Ar(sample_size_pop2[locus],as.factor(data_pop2[,locus]),min.n.pop2)
   Ar_pop3[locus]  <- Ar(sample_size_pop3[locus],as.factor(data_pop3[,locus]),min.n.pop3)
   Ar_pop4[locus]  <- Ar(sample_size_pop4[locus],as.factor(data_pop4[,locus]),min.n.pop4)
+  Ar_total[locus] <- Ar(sample_size_total[locus],as.factor(data_total[,locus]),min.n.total)
 
-  V_pop1[locus]  <- var(data_pop1[,locus]) #
-  V_pop2[locus]  <- var(data_pop2[,locus]) #
-  V_pop3[locus]  <- var(data_pop3[,locus]) #
-  V_pop4[locus]  <- var(data_pop4[,locus]) #
-  V_total[locus] <- var(data_total[,locus]) #
 
-  R_pop1[locus]  <- max(data_pop1[,locus])-min(data_pop1[,locus]) #
-  R_pop2[locus]  <- max(data_pop2[,locus])-min(data_pop2[,locus]) #
-  R_pop3[locus]  <- max(data_pop3[,locus])-min(data_pop3[,locus]) #
-  R_pop4[locus]  <- max(data_pop4[,locus])-min(data_pop4[,locus]) #
-  R_total[locus] <- max(data_total[,locus])-min(data_total[,locus]) #
+  V_pop1[locus]  <- var(data_pop1[,locus], na.rm=T) #
+  V_pop2[locus]  <- var(data_pop2[,locus], na.rm=T) #
+  V_pop3[locus]  <- var(data_pop3[,locus], na.rm=T) #
+  V_pop4[locus]  <- var(data_pop4[,locus], na.rm=T) #
+  V_total[locus] <- var(data_total[,locus], na.rm=T) #
+  if(V_pop1[locus]==0) V_pop1[locus]<- NA
+  if(V_pop2[locus]==0) V_pop2[locus]<- NA
+  if(V_pop3[locus]==0) V_pop3[locus]<- NA
+  if(V_pop4[locus]==0) V_pop4[locus]<- NA
+  if(V_total[locus]==0) V_total[locus]<- NA
+
+  R_pop1[locus]  <- max(data_pop1[,locus], na.rm=T)-min(data_pop1[,locus] , na.rm=T) #
+  R_pop2[locus]  <- max(data_pop2[,locus], na.rm=T)-min(data_pop2[,locus] , na.rm=T) #
+  R_pop3[locus]  <- max(data_pop3[,locus], na.rm=T)-min(data_pop3[,locus] , na.rm=T) #
+  R_pop4[locus]  <- max(data_pop4[,locus], na.rm=T)-min(data_pop4[,locus] , na.rm=T) #
+  R_total[locus] <- max(data_total[,locus],na.rm=T)-min(data_total[,locus], na.rm=T) #
 
   GW_pop1[locus]  <- A_pop1[locus]/(R_pop1[locus]+1) #
   GW_pop2[locus]  <- A_pop2[locus]/(R_pop2[locus]+1) #
   GW_pop3[locus]  <- A_pop3[locus]/(R_pop3[locus]+1) #
   GW_pop4[locus]  <- A_pop4[locus]/(R_pop4[locus]+1) #
-
   GW_total[locus] <- A_total[locus]/(R_total[locus]+1) #
+
   if (A_pop1[locus]>1)  P_pop1[locus]  <- T #
   if (A_pop2[locus]>1)  P_pop2[locus]  <- T #
   if (A_pop3[locus]>1)  P_pop3[locus]  <- T #
   if (A_pop4[locus]>1)  P_pop4[locus]  <- T #
   if (A_total[locus]>1) P_total[locus] <- T #
+
   HV_pop1[locus]  <- H_pop1[locus]/V_pop1[locus] # 
   HV_pop2[locus]  <- H_pop2[locus]/V_pop2[locus] # 
   HV_pop3[locus]  <- H_pop3[locus]/V_pop3[locus] # 
@@ -479,7 +487,7 @@ if (!add_simulations){
   write.table( cbind( #### PARAMETERS
     "model","theta1",  "theta2", "theta3", "theta4", "theta5","theta6", "thetaA",
     if(model_type=="im") { 
-    cbind("mig12", "mig13", "mig14", "mig21", "mig31", "mig34","mig23", "mig32","mig24","mig42","mig34", "mig43")
+    cbind("mig12", "mig13", "mig14", "mig21", "mig31", "mig41","mig23", "mig32","mig24","mig42","mig34", "mig43")
     } else {},   
     "tau_4_3","tau_3_2", "tau_2_1",
     # SUMMARY STATISTICS                      
@@ -947,7 +955,7 @@ for (stat in c("H","He","A","Ar","R","GW","A","V","HV","P")){   #"A","V","HV","P
     write.table( cbind( ## PARAMETERS
     model,theta1, theta2, theta3, theta4, theta5, theta6, thetaA,  
     if(model_type=="im") { 
-    cbind(mig12, mig13, mig14, mig21, mig31, mig34,mig23, mig32,mig24,mig42,mig34, mig43)
+    cbind(mig12, mig13, mig14, mig21, mig31, mig41, mig23, mig32,mig24,mig42,mig34, mig43)
     } else {},   
     tau_4_3,tau_3_2, tau_2_1, 
     # SUMMARY STATISTICS

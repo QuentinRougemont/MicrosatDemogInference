@@ -2,9 +2,11 @@
 #purpose = "run coalescent simulation using ms for microsatellite data for a 4population model"
 #date    = "05/05/2017"
 #authors =  "Quentin Rougemont"
-#modification from the original 2 pop scripts developped by M. Navascues (see 2 pop model)
+#modification from the original 2 pop scripts developped by M. Navascues
 #Here allows to compare different rates and direction of migration (im model) and to compare against a model without migration
 #output  = "file of empirically observed statistics (target_sumstats.txt ) and reference table of coalescent sims.(reference_table.txt)"
+
+if("pegas" %in% rownames(installed.packages()) == FALSE) {install.packages("pegas") }
 
 library(pegas)
 
@@ -41,6 +43,7 @@ batch <- 1
 
 # Uses RR Hudson coalescent simulator (ms)
 source("../../00-scripts/msdir/readms.output.R")
+# source("/home/ubuntu/programmation/R/ABC/msdir/readms.output.R")
 # READ DATA
 # Data input file consist on a text file for each population which contains allele data (size in base pairs)
 # loci in columns
@@ -50,6 +53,7 @@ data_pop1 <- read.table(pop1)
 data_pop2 <- read.table(pop2)
 data_pop3 <- read.table(pop3)
 data_pop4 <- read.table(pop4)
+
 
 #remove outlier alleles and missing data
 for (i in 1:length(data_pop1)){
@@ -245,39 +249,40 @@ He <- function(x)
 }
 A <- function(x)
 {
- A <- length(levels(x))
- return(A)
+	A <- length(levels(x))
+	return(A)
 }
 Ar <- function(x,y,z)
 {
- Ar <- sum(1-choose(x-table(y),z)/choose(x,z))
+	Ar <- sum(1-choose(x-table(y),z)/choose(x,z))
 }
-V <- function(x,y) #y = sample_size
+V <- function(x) 
 {
- V < var(x)
- return(V)
+	V <- var(x)
+	return(V)
 }    
 R <- function(x) #y = sample_size
 {
- R <- max(x)-min(x)
- return(R)
+	R <- max(x)-min(x)
+	return(R)
 }    
 GW <- function(x) #y = sample_size
 {
- GW <-A(x)/(R(x) +1)
- return(GW)
+	GW <-A(x)/(R(x) +1)
+	return(GW)
 }    
 HV <- function(x) #y = sample_size
 {
- HV <- H(x)/V(x)
- return(HV)
+	HV <- H(x)/V(x)
+	return(HV)
 } 
 Gst <- function(x,y,z)
 {
- Gst <-(H(z) - mean(cbind(H(y), H(z) ))) /H(z)
- return(Gst)
+	Gst <-(H(z) - mean(cbind(H(x), H(y) ))) /H(z)
+	return(Gst)
 }
-#To DO: implement Gst', Dst, etc...
+#TO DO: Ajouter Dest, Fst', Fis, etc...
+
 n_pop1=array(NA,number_of_loci)
 n_pop2=array(NA,number_of_loci)
 n_pop3=array(NA,number_of_loci)
@@ -323,11 +328,11 @@ for (locus in 1:number_of_loci){
   Ar_pop3[locus]  <- Ar(sample_size_pop3[locus],as.factor(data_pop3[,locus]),min.n.pop3)
   Ar_pop4[locus]  <- Ar(sample_size_pop4[locus],as.factor(data_pop4[,locus]),min.n.pop4)
 
-  V_pop1[locus]  <- V(data_pop1[,locus]) #
-  V_pop2[locus]  <- V(data_pop2[,locus]) #
-  V_pop3[locus]  <- V(data_pop3[,locus]) #
-  V_pop4[locus]  <- V(data_pop4[,locus]) #
-  V_total[locus] <- V(data_total[,locus]) #
+  V_pop1[locus]  <- var(data_pop1[,locus]) #
+  V_pop2[locus]  <- var(data_pop2[,locus]) #
+  V_pop3[locus]  <- var(data_pop3[,locus]) #
+  V_pop4[locus]  <- var(data_pop4[,locus]) #
+  V_total[locus] <- var(data_total[,locus]) #
 
   R_pop1[locus]  <- max(data_pop1[,locus])-min(data_pop1[,locus]) #
   R_pop2[locus]  <- max(data_pop2[,locus])-min(data_pop2[,locus]) #
@@ -464,7 +469,7 @@ write.table( cbind(
 file="target_sumstats.txt",sep=" ",
 quote=F,col.names=F,row.names=F,append=T)
 
-cat("empirical statistics succesfully computed :)" )
+cat("empirical statistics succesfully computed" )
 ###################################
 #Prepare ref.table for simulation #
 ##################################
@@ -569,72 +574,72 @@ for(i in 1:nsim){
   thetaA <- runif(1, theta1_min, theta1_max)
 
   if (mig_model=="full") {
-   mig12   <- runif( 1, min=0, max=20 )
-   mig13   <- runif( 1, min=0, max=20 )
-   mig14   <- runif( 1, min=0, max=20 )
-   mig21   <- runif( 1, min=0, max=20 )
+    mig12   <- runif( 1, min=0, max=20 )
+    mig13   <- runif( 1, min=0, max=20 )
+    mig14   <- runif( 1, min=0, max=20 )
+    mig21   <- runif( 1, min=0, max=20 )
     mig23   <- runif( 1, min=0, max=20 )
-   mig24   <- runif( 1, min=0, max=20 )
-   mig31   <- runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig34   <- runif( 1, min=0, max=20 )
-   mig41   <- runif( 1, min=0, max=20 )
-   mig42   <- runif( 1, min=0, max=20 )
-   mig43   <- runif( 1, min=0, max=20 )
+    mig24   <- runif( 1, min=0, max=20 )
+    mig31   <- runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig34   <- runif( 1, min=0, max=20 )
+    mig41   <- runif( 1, min=0, max=20 )
+    mig42   <- runif( 1, min=0, max=20 )
+    mig43   <- runif( 1, min=0, max=20 )
    } else if (mig_model=="234_432") {
-   mig12   <- 0 #runif( 1, min=0, max=20 )
-   mig13   <- 0 #runif( 1, min=0, max=20 )
-   mig14   <- 0 #runif( 1, min=0, max=20 )
-   mig21   <- 0 #runif( 1, min=0, max=20 )
+    mig12   <- 0 #runif( 1, min=0, max=20 )
+    mig13   <- 0 #runif( 1, min=0, max=20 )
+    mig14   <- 0 #runif( 1, min=0, max=20 )
+    mig21   <- 0 #runif( 1, min=0, max=20 )
     mig23   <- runif( 1, min=0, max=20 )
-   mig24   <- runif( 1, min=0, max=20 )
-   mig31   <- 0 #runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig34   <- runif( 1, min=0, max=20 )
-   mig41   <- 0 #runif( 1, min=0, max=20 )
-   mig42   <- runif( 1, min=0, max=20 )
-   mig43   <- runif( 1, min=0, max=20 )
+    mig24   <- runif( 1, min=0, max=20 )
+    mig31   <- 0 #runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig34   <- runif( 1, min=0, max=20 )
+    mig41   <- 0 #runif( 1, min=0, max=20 )
+    mig42   <- runif( 1, min=0, max=20 )
+    mig43   <- runif( 1, min=0, max=20 )
    } else if (mig_model=="23_32_34_43") {
-   mig12   <- 0 #runif( 1, min=0, max=20 )
-   mig13   <- 0 #runif( 1, min=0, max=20 )
-   mig14   <- 0 #runif( 1, min=0, max=20 )
-   mig21   <- 0 #runif( 1, min=0, max=20 )
+    mig12   <- 0 #runif( 1, min=0, max=20 )
+    mig13   <- 0 #runif( 1, min=0, max=20 )
+    mig14   <- 0 #runif( 1, min=0, max=20 )
+    mig21   <- 0 #runif( 1, min=0, max=20 )
     mig23   <- runif( 1, min=0, max=20 )
-   mig24   <- 0 #runif( 1, min=0, max=20 )
-   mig31   <- 0 #runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig34   <- runif( 1, min=0, max=20 )
-   mig41   <- 0 #runif( 1, min=0, max=20 )
-   mig42   <- 0 #runif( 1, min=0, max=20 )
-   mig43   <- runif( 1, min=0, max=20 )
+    mig24   <- 0 #runif( 1, min=0, max=20 )
+    mig31   <- 0 #runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig34   <- runif( 1, min=0, max=20 )
+    mig41   <- 0 #runif( 1, min=0, max=20 )
+    mig42   <- 0 #runif( 1, min=0, max=20 )
+    mig43   <- runif( 1, min=0, max=20 )
   } else if (mig_model=="123_321") {
-   mig12   <- runif( 1, min=0, max=20 )
-   mig13   <- runif( 1, min=0, max=20 )
-   mig14   <- 0 #runif( 1, min=0, max=20 )
-   mig21   <- runif( 1, min=0, max=20 )
+    mig12   <- runif( 1, min=0, max=20 )
+    mig13   <- runif( 1, min=0, max=20 )
+    mig14   <- 0 #runif( 1, min=0, max=20 )
+    mig21   <- runif( 1, min=0, max=20 )
     mig23   <- runif( 1, min=0, max=20 )
-   mig24   <- 0 #runif( 1, min=0, max=20 )
-   mig31   <- runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig34   <- 0 #runif( 1, min=0, max=20 )
-   mig41   <- 0 #runif( 1, min=0, max=20 )
-   mig42   <- 0 #runif( 1, min=0, max=20 )
-   mig43   <- 0 #runif( 1, min=0, max=20 )
+    mig24   <- 0 #runif( 1, min=0, max=20 )
+    mig31   <- runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig34   <- 0 #runif( 1, min=0, max=20 )
+    mig41   <- 0 #runif( 1, min=0, max=20 )
+    mig42   <- 0 #runif( 1, min=0, max=20 )
+    mig43   <- 0 #runif( 1, min=0, max=20 )
    } else if (mig_model=="12_21_32_23") {
-   mig12   <- runif( 1, min=0, max=20 )
-   mig13   <- 0 #runif( 1, min=0, max=20 )
-   mig14   <- 0 #runif( 1, min=0, max=20 )
-   mig21   <- runif( 1, min=0, max=20 )
+    mig12   <- runif( 1, min=0, max=20 )
+    mig13   <- 0 #runif( 1, min=0, max=20 )
+    mig14   <- 0 #runif( 1, min=0, max=20 )
+    mig21   <- runif( 1, min=0, max=20 )
     mig23   <- runif( 1, min=0, max=20 )
-   mig24   <- 0 #runif( 1, min=0, max=20 )
-   mig31   <- 0 #runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig34   <- 0 #runif( 1, min=0, max=20 )
-   mig41   <- 0 #runif( 1, min=0, max=20 )
-   mig42   <- 0 #runif( 1, min=0, max=20 )
-   mig43   <- 0 #runif( 1, min=0, max=20 )
+    mig24   <- 0 #runif( 1, min=0, max=20 )
+    mig31   <- 0 #runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig34   <- 0 #runif( 1, min=0, max=20 )
+    mig41   <- 0 #runif( 1, min=0, max=20 )
+    mig42   <- 0 #runif( 1, min=0, max=20 )
+    mig43   <- 0 #runif( 1, min=0, max=20 )
 
- #release your creativity here to add other migration models
+#release your creativity here to add other migration models
  
   } else if (mig_model=="23_32") {
    mig12   <- mig21 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
@@ -642,45 +647,45 @@ for(i in 1:nsim){
    mig32   <- runif( 1, min=0, max=20 )
    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="12_21") {
-   mig23   <- mig32 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
-   mig12   <- runif( 1, min=0, max=20 )
-   mig21   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig23   <- mig32 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
+    mig12   <- runif( 1, min=0, max=20 )
+    mig21   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="13_31") {
-   mig12   <- mig21 <- mig23 <- mig32 <- 0  #runif( 1, min=0, max=20 )
-   mig13   <- runif( 1, min=0, max=20 )
-   mig31   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig21 <- mig23 <- mig32 <- 0  #runif( 1, min=0, max=20 )
+    mig13   <- runif( 1, min=0, max=20 )
+    mig31   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="23") {
- mig12   <- mig21 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
-   mig23   <- runif( 1, min=0, max=20 )
-   mig32   <- 0 #runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig21 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
+    mig23   <- runif( 1, min=0, max=20 )
+    mig32   <- 0 #runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="32") {
- mig12   <- mig21 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
-   mig23   <- 0 #runif( 1, min=0, max=20 )
-   mig32   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig21 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
+    mig23   <- 0 #runif( 1, min=0, max=20 )
+    mig32   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="12") {
- mig32   <- mig21 <- mig13 <- mig31 <- 0  #runif( 1, min=0, max=20 )
-   mig23   <- 0 #runif( 1, min=0, max=20 )
-   mig12   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig32   <- mig21 <- mig13 <- mig31 <- 0  #runif( 1, min=0, max=20 )
+    mig23   <- 0 #runif( 1, min=0, max=20 )
+    mig12   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="21") {
- mig12   <- mig32 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
-   mig23   <- 0 #runif( 1, min=0, max=20 )
-   mig21   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig32 <- mig13 <- mig31 <- 0 #runif( 1, min=0, max=20 )
+    mig23   <- 0 #runif( 1, min=0, max=20 )
+    mig21   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="13") {
- mig12   <- mig21 <- mig32 <- mig31 <- 0 #runif( 1, min=0, max=20 )
-   mig23   <- 0 #runif( 1, min=0, max=20 )
-   mig13   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig21 <- mig32 <- mig31 <- 0 #runif( 1, min=0, max=20 )
+    mig23   <- 0 #runif( 1, min=0, max=20 )
+    mig13   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
   } else if (mig_model=="31") {
- mig12   <- mig21 <- mig13 <- mig32 <- 0 #runif( 1, min=0, max=20 )
-   mig23   <- 0 #runif( 1, min=0, max=20 )
-   mig31   <- runif( 1, min=0, max=20 )
-   mig11   <- mig22   <- mig33   <- "X"
+    mig12   <- mig21 <- mig13 <- mig32 <- 0 #runif( 1, min=0, max=20 )
+    mig23   <- 0 #runif( 1, min=0, max=20 )
+    mig31   <- runif( 1, min=0, max=20 )
+    mig11   <- mig22   <- mig33   <- "X"
  } else if (mig_model=="no_mig") {
          mig21<-mig12<-mig13<-mig23<-mig31<-mig32<-0
  }
@@ -752,6 +757,7 @@ for(i in 1:nsim){
   deltamu1_4  <- array(NA,number_of_loci)
   deltamu2_4  <- array(NA,number_of_loci)
   deltamu3_4  <- array(NA,number_of_loci)
+
    
   for (locus in 1:number_of_loci){
 
@@ -823,42 +829,47 @@ for(i in 1:nsim){
     
     genotypes <- 500+colSums(t(msout$gametes[[1]])*mutation_size)
     
+    geno_pop1 <- genotypes[1:sample_size_pop1[locus]]
+    geno_pop2 <- genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])]
+    geno_pop3 <- genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]
+    geno_pop4 <- genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]
+    
      #calculating summary statistics
-    H_pop1[locus]  <- H(as.factor(genotypes[1:sample_size_pop1[locus]])) 
-    H_pop2[locus]  <- H(as.factor(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])]))
-    H_pop3[locus]  <- H(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]))
-    H_pop4[locus]  <- H(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]))
+    H_pop1[locus]  <- H(as.factor(geno_pop1)) 
+    H_pop2[locus]  <- H(as.factor(geno_pop2))
+    H_pop3[locus]  <- H(as.factor(geno_pop3))
+    H_pop4[locus]  <- H(as.factor(geno_pop4))
     H_total[locus] <- H(as.factor(genotypes))
     
-    He_pop1[locus] <- 1-sum((table(as.factor(genotypes[1:sample_size_pop1[locus]]))/sum(table(as.factor(genotypes[1:sample_size_pop1[locus]])),na.rm=T))^2)
-    He_pop2[locus] <- 1-sum((table(as.factor(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])]))/sum(table(as.factor(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])),na.rm=T))^2)
-    He_pop3[locus] <- 1-sum((table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]))/sum(table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])),na.rm=T))^2)
-    He_pop4[locus] <- 1-sum((table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]))/sum(table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])),na.rm=T))^2)    
-    He_total[locus] <- 1-sum((table(as.factor(genotypes))/sum(table(as.factor(genotypes)),na.rm=T))^2)           
+    He_pop1[locus] <- He(geno_pop1)
+    He_pop2[locus] <- He(geno_pop2)
+    He_pop3[locus] <- He(geno_pop3)
+    He_pop4[locus] <- He(geno_pop4)
+    He_total[locus] <-He(genotypes)
     
-    A_pop1[locus]  <- length(levels(as.factor(genotypes[1:sample_size_pop1[locus]])))
-    A_pop2[locus]  <- length(levels(as.factor(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])]))
-    A_pop3[locus]  <- length(levels(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]))
-    A_pop4[locus]  <- length(levels(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])))
-    A_total[locus] <- length(levels(as.factor(genotypes)))
+    A_pop1[locus]  <- A(as.factor(geno_pop1))
+    A_pop2[locus]  <- A(as.factor(geno_pop2))
+    A_pop3[locus]  <- A(as.factor(geno_pop3))
+    A_pop4[locus]  <- A(as.factor(geno_pop4))
+    A_total[locus] <- A(as.factor(genotypes))
 
-    Ar_pop1[locus] <-sum(1-choose(sample_size_pop1[locus]-table(as.factor(genotypes[1:sample_size_pop1[locus]])),min.n.pop1)/choose(sample_size_pop1[locus],min.n.pop1))
-    Ar_pop2[locus] <-sum(1-choose(sample_size_pop2[locus]-table(as.factor(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])),min.n.pop2)/choose(sample_size_pop2[locus],min.n.pop2))
-    Ar_pop3[locus] <-sum(1-choose(sample_size_pop3[locus]-table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])),min.n.pop3)/choose(sample_size_pop3[locus],min.n.pop3))
-    Ar_pop4[locus] <-sum(1-choose(sample_size_pop4[locus]-table(as.factor(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])),min.n.pop4)/choose(sample_size_pop4[locus],min.n.pop4))
-    Ar_total[locus] <-sum(1-choose(sample_size_total[locus]-table(as.factor(genotypes)),min.n.total)/choose(sample_size_total[locus],min.n.total))
+    Ar_pop1[locus] <-Ar(sample_size_pop1[locus],as.factor(geno_pop1),min.n.pop1)
+    Ar_pop2[locus] <-Ar(sample_size_pop2[locus],as.factor(geno_pop2),min.n.pop2)
+    Ar_pop3[locus] <-Ar(sample_size_pop3[locus],as.factor(geno_pop3),min.n.pop3)
+    Ar_pop4[locus] <-Ar(sample_size_pop4[locus],as.factor(geno_pop4),min.n.pop4)
+    Ar_total[locus]<-Ar(sample_size_total[locus],as.factor(genotypes),min.n.total)
 
-    V_pop1[locus]  <- var(genotypes[1:sample_size_pop1[locus]])
-    V_pop2[locus]  <- var(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])
-    V_pop3[locus]  <- var(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])
-    V_pop4[locus]  <- var(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])
-    V_total[locus] <- var(genotypes)
+    V_pop1[locus]  <- V(geno_pop1)
+    V_pop2[locus]  <- V(geno_pop2)
+    V_pop3[locus]  <- V(geno_pop3)
+    V_pop4[locus]  <- V(geno_pop4)
+    V_total[locus] <- V(genotypes)
 
-    R_pop1[locus]  <- max(genotypes[1:sample_size_pop1[locus]])-min(genotypes[1:sample_size_pop1[locus]])
-    R_pop2[locus]  <- max(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])-min(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])
-    R_pop3[locus]  <- max(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])-min(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])
-    R_pop4[locus]  <- max(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])-min(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]])
-    R_total[locus] <- max(genotypes)-min(genotypes)
+    R_pop1[locus]  <- R(geno_pop1)
+    R_pop2[locus]  <- R(geno_pop2)
+    R_pop3[locus]  <- R(geno_pop3)
+    R_pop4[locus]  <- R(geno_pop4)
+    R_total[locus] <- R(geno_pop1)
 
     GW_pop1[locus]  <- A_pop1[locus]/(R_pop1[locus]+1)
     GW_pop2[locus]  <- A_pop2[locus]/(R_pop2[locus]+1)
@@ -877,20 +888,27 @@ for(i in 1:nsim){
     HV_pop4[locus]  <- H_pop4[locus]/V_pop4[locus]
     HV_total[locus] <- H_total[locus]/V_total[locus]
 
-    GST1_2[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop2[locus])))/H_total[locus]
-    GST1_3[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop3[locus])))/H_total[locus]
-    GST2_3[locus] <- (H_total[locus] - mean(cbind(H_pop2[locus],H_pop2[locus])))/H_total[locus]
-    GST1_4[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop4[locus])))/H_total[locus]
-    GST2_4[locus] <- (H_total[locus] - mean(cbind(H_pop2[locus],H_pop4[locus])))/H_total[locus]
-    GST3_4[locus] <- (H_total[locus] - mean(cbind(H_pop3[locus],H_pop4[locus])))/H_total[locus]
+    GST1_2[locus] <- Gst(as.factor(geno_pop1),as.factor(geno_pop2),as.factor(genotypes))
+    GST1_3[locus] <- Gst(as.factor(geno_pop1),as.factor(geno_pop3),as.factor(genotypes))
+    GST1_4[locus] <- Gst(as.factor(geno_pop1),as.factor(geno_pop4),as.factor(genotypes))
+    GST2_3[locus] <- Gst(as.factor(geno_pop2),as.factor(geno_pop3),as.factor(genotypes))
+    GST2_4[locus] <- Gst(as.factor(geno_pop2),as.factor(geno_pop4),as.factor(genotypes))
+    GST3_4[locus] <- Gst(as.factor(geno_pop3),as.factor(geno_pop4),as.factor(genotypes))
+    
+    #GST1_2[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop2[locus])))/H_total[locus]
+    #GST1_3[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop3[locus])))/H_total[locus]
+    #GST2_3[locus] <- (H_total[locus] - mean(cbind(H_pop2[locus],H_pop2[locus])))/H_total[locus]
+    #GST1_4[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop4[locus])))/H_total[locus]
+    #GST2_4[locus] <- (H_total[locus] - mean(cbind(H_pop2[locus],H_pop4[locus])))/H_total[locus]
+    #GST3_4[locus] <- (H_total[locus] - mean(cbind(H_pop3[locus],H_pop4[locus])))/H_total[locus]
     GST[locus] <- (H_total[locus] - mean(cbind(H_pop1[locus],H_pop2[locus],H_pop3[locus])))/H_total[locus]
 
-    deltamu1_2[locus] <- (mean(genotypes[1:sample_size_pop1[locus]])-mean(genotypes[(sample_size_pop1[locus]+1):(sample_size_total[locus]-sample_size_pop2[locus])]))^2
-    deltamu1_3[locus] <- (mean(genotypes[1:sample_size_pop1[locus]])-mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]))^2
-    deltamu2_3[locus] <- (mean(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])-mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])]))^2
-    detlamu1_4[locus] <- (mean(genotypes[1:sample_size_pop1[locus]])-mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]))^2
-    deltamu2_4[locus] <- (mean(genotypes[(sample_size_pop1[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus])])-mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]))^2
-    detlamu3_4[locus] <- (mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+1):(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus])])-mean(genotypes[(sample_size_pop1[locus]+sample_size_pop2[locus]+sample_size_pop3[locus]+1):sample_size_total[locus]]))^2
+    deltamu1_2[locus] <- (mean(geno_pop1) - mean(geno_pop2))^2
+    deltamu1_3[locus] <- (mean(geno_pop1) - mean(geno_pop3))^2
+    deltamu2_3[locus] <- (mean(geno_pop2) - mean(geno_pop3))^2
+    deltamu1_4[locus] <- (mean(geno_pop1) - mean(geno_pop4))^2
+    deltamu2_4[locus] <- (mean(geno_pop2) - mean(geno_pop4))^2 
+    deltamu3_4[locus] <- (mean(geno_pop3) - mean(geno_pop4))^2 
   }
   
 for (stat in c("H","He","A","Ar","R","GW","A","V","HV","P")){   #"A","V","HV","P"

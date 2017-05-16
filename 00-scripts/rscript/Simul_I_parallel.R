@@ -1,13 +1,28 @@
 #!/usr/bin/Rscript
 
+if("pegas" %in% rownames(installed.packages()) == FALSE) {install.packages("pegas") }
+
 library(pegas)
 
 argv  <- commandArgs(TRUE)
+if (argv[1]=="-h" || length(argv)==0){
+        cat("\n 8 parameter needed!! \n  
+    (1) pop1 (genotype data for pop1) \n, 
+    (2) pop2 (genotype data for pop2) \n, 
+    (3) nsim (number of simulation), \n 
+    (4) nloc (number of loci)\n 
+    (5) pattern of repeat motif for each loci (a single colomn file with one motif on each ligne) \n 
+    #(6) migration_model (for migration matrix) \n 
+    #(7) model_type(either am, im, sc or si)  \n" )
+}else{
+
 pop1  <- argv[1]
 pop2  <- argv[2]
 nsim  <- as.numeric(argv[3])
 nloc  <- as.numeric(argv[4])
 motif <- argv[5]
+}
+
 
 #nsim <- 10000
 nsim  <- nsim
@@ -16,8 +31,8 @@ reftable_file   <- "reference_table.txt"
 batch <- 1
 
 # Uses RR Hudson coalescent simulator (ms)
-source("/home/quentin/script/msdir/readms.output.R")
- 
+ source("../../00-scripts/msdir/readms.output.R")
+
 # Data input file consist on a text file for each population which contains allele data (size in base pairs)
 # loci in columns
 # gene copies (gene copies = 2 * number of individuals) in rows

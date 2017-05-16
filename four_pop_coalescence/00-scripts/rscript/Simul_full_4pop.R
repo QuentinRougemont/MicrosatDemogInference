@@ -42,7 +42,6 @@ batch <- 1
 
 # Uses RR Hudson coalescent simulator (ms)
 source("../../00-scripts/msdir/readms.output.R")
-# source("/home/ubuntu/programmation/R/ABC/msdir/readms.output.R")
 # READ DATA
 # Data input file consist on a text file for each population which contains allele data (size in base pairs)
 # loci in columns

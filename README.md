@@ -15,7 +15,7 @@ The comparaison of 4 models of population divergence namely
 * Ancient Migration (AM) and 
 * Secondary Contact (SC)
 
-computation of other summary statistics:
+Computation of other summary statistics:
 * Allelic Richness (Ar)
 * Expected Heterozygosity
 with the previous stats being include in function to reduce the complexity of the scripts
@@ -30,7 +30,7 @@ with the previous stats being include in function to reduce the complexity of th
 * inclusion in bash scripts for parallelisation and runs easily using any microstallite data.
 microstallite data that have to be stored in the `01-data` folder together with a file containing the `repeat_motif` for each microsatellites markers.
 
-I also extended the pipeline to performed :
+I also extended the pipeline to perform :  
 `3 pops` colaescent derivation of our two population models for:
 * Isolation w. Migration (IM) 
 * Strict Isolation (SI)
@@ -59,24 +59,25 @@ available here: http://onlinelibrary.wiley.com/doi/10.1111/evo.12429/full
 
 ### Prearing your data
 
-You'll need to provide a separate input file for each population. Each file contains one markers in raw, with one row for each gene copies (2 rows per individuals) and loci in collums
-A file containing the length of the repeat_motif for each microsatellite markers is also needed . One row per markers. 
+You'll need to provide a separate input file for each population. Each file contains one markers in raw, with one row for each gene copies (2 rows per individuals) and loci in columns  
+A file containing the length of the repeat_motif for each microsatellite markers is also needed.  
+One row per markers.   
 These input file are stored in the `01-data` folder
 
-then go to `00-scripts/models/` and edit the script `model.\*.sh` to provide the name of the input file 
-the script `model.1` sh is for SI
-`model.2.sh` for  IM 
-`model.3.sh` for SC
-`model.4.sh` for AM
+then go to `00-scripts/models/` and edit the script `model.\*.sh` to provide the name of the input file   
+the script `model.1` sh is for SI  
+`model.2.sh` for  IM   
+`model.3.sh` for SC  
+`model.4.sh` for AM  
 
 the corresponding Rscripts are found in the `00-scripts/rscript/` with name `Simul_*_parallel.R `
 
 ## Chooose the prior
 
-* go in ``00-scripts/rscript/` and edit the Simul\*.R scripts to set prior according to what you think will fit the data.
-I recommand to use large and uninformative priors first.
+* go in ``00-scripts/rscript/` and edit the Simul\*.R scripts to set prior according to what you think will fit the data.  
+I recommand to use large and uninformative priors first.  
 Wou'll have to choose a fixed thetaRef, according to thetaRef=4\*Nref\*µ meaining that you need to have an idea of the mutation rate (ideally)
-then you have to choose priors for :
+then you have to choose priors for :  
 * effective population size (N1, N2, Nancestral, etc)
 * migration rates (M1, M2, etc)
 * Split time (T=Tsplit/4Nref)

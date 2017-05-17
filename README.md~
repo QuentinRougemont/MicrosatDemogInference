@@ -74,19 +74,19 @@ the corresponding Rscripts are found in the `00-scripts/rscript/` with name `Sim
 
 ## Chooose the prior
 
-* go in `00-scripts/rscript/` and edit the `Simul\*.R scripts` to set prior according to what you think will fit the data.  
+* go in ``00-scripts/rscript/` and edit the Simul\*.R scripts to set prior according to what you think will fit the data.  
 I recommand to use large and uninformative priors first.  
-Wou'll have to choose a fixed thetaRef, according to thetaRef=4\*_Nref_\*µ meaining that you need to have an idea of the mutation rate (ideally)
+Wou'll have to choose a fixed thetaRef, according to thetaRef=4\*Nref\*µ meaining that you need to have an idea of the mutation rate (ideally)
 then you have to choose priors for :  
 * effective population size (N1, N2, Nancestral, etc)
 * migration rates (M1, M2, etc)
-* Split time (T=Tsplit/4*Nref*)
+* Split time (T=Tsplit/4Nref)
 
 beware that in `ms` from Hudson, all is scaled by 4Nref so that you need to thinks mostly in terms of ratios for the effective population size and Split times.
 I strongly advise reading of `msdoc.pdf` included in the `00-scripts/msdir ` 
 
 ## Runing the pipeline
 
-once the prior are set coalescents simulations can be run and needs ideally to be run in parallel if you want to save time.  
-To do so I provided a series of 4 scripts (one for each model) in `00-scripts/models/model_job_array\*.sh`.  
-These scripts are rather 'cluster-specific' and depending on your clustering machine, you'll have to change that but this provides a clue.
+once the prior are set coalescents simulations can be run and needs ideally to be run in parallel if you want to save time.
+to do so I provided a series of 4 scripts (one for each model) in `00-scripts/models/model_job_array\*.sh` These scripts are rather 'cluster-specific' and depending on your clustering machine, you'll have to change that but this provides a clue.
+

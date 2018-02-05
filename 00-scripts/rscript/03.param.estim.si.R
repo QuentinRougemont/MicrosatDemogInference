@@ -23,7 +23,8 @@ for (j in 1:ncol(M_SI)){
      M_SI[is.na(M_SI[, j]), j] <- means[j]
  }
 
-#exclude parameters (contained in the first columns) of the simulation table to keep only summary statistics
+#exclude parameters (contained in the first columns) of the simulation 
+#table to keep only summary statistics
 param.si=c(2:5)
 target.stat=c(12:17,24:45)
 
@@ -31,8 +32,23 @@ obs=read.table("target_sumstats.txt", header=T)
 #drop out Ho, NA,(NA=Number of allele not missing data!!):
 obs2=obs[,-c(1:6,13:18)]
 
-abc.posterior <- abc(target  = obs2, param = M_SI[,param.si], sumstat = M_SI[,target.stat], tol = 0.001, transf=c("logit", "logit", "logit", "logit"), 
-	logit.bounds = rbind(range(M_SI[, 2]), range(M_SI[, 3]), range(M_SI[, 4]), range(M_SI[, 5])),  hcorr=T, method  = "neuralnet", numnet=20, sizenet=5)
+bound <- NULL
+tmp <- NULL
+for (i in range(param.si)){
+tmp <- range(M_SI[,i])
+bound <- rbind(bound,tmp)
+}
+
+abc.posterior <- abc(target  = obs2, 
+    param = M_SI[,param.si], 
+    sumstat = M_SI[,target.stat], 
+    tol = 0.001, 
+    transf=c(rep("logit",4)), 
+    logit.bounds = bound,  
+    hcorr=T, 
+    method  = "neuralnet", 
+    numnet=50, 
+    sizenet=15)
 
 
 write.table(abc.posterior$weights,"weight.si",quote=F,row.names=F,col.names=F)

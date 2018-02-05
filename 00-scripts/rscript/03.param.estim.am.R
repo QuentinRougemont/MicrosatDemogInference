@@ -11,7 +11,7 @@ argv<-commandArgs(TRUE)
 model<-argv[1]
 
 #iso
-nlinesFul=as.numeric(strsplit(system("wc -l im.simul.ABC.txt", intern=T), " ")[[1]][1])
+nlinesFul <- as.numeric(strsplit(system("wc -l am.simul.ABC.txt", intern=T), " ")[[1]][1])
 #load simul
 model="am.simul.ABC.txt"
 M_SC=matrix(scan(model), byrow=T, nrow=nlinesFul) 
@@ -21,7 +21,8 @@ for (j in 1:ncol(M_SC)){
      M_SC[is.na(M_SC[, j]), j] <- means[j]
  }
 
-#exclude parameters (contained in the first columns) of the simulation table to keep only summary statistics
+#exclude parameters (contained in the first columns) of the simulation 
+#table to keep only summary statistics
 #delete Ho, et NA (NA=Number of allele not missing data!!)
 param.sc=c(2:8)
 target.stat=c(14:19,26:47)
@@ -30,11 +31,31 @@ obs=read.table("target_sumstats.txt", header=T)
 #drop out Ho, NA,(NA=Number of allele not missing data!!):
 obs2=obs[,-c(1:6,13:18)]
 
-abc.posterior <- abc(target  = obs2, param = M_SC[,param.im], sumstat = M_SC[,target.stat], tol = 0.001, transf=c("logit", "logit", "logit", "logit","logit", "logit","logit" ), 
-	logit.bounds = rbind(range(M_SC[, 2]), range(M_SC[, 3]), range(M_SC[, 4]), range(M_SC[, 5]),range(M_SC[, 6]),range(M_SC[, 7]), range(M_SC[,8])),  hcorr=T, method  = "neuralnet", numnet=50, sizenet=15)
+bound <- NULL
+tmp <- NULL
+for (i in range(param.sc)){
+tmp <- range(M_SC[,i])
+bound <- rbind(bound,tmp)
+}
 
-write.table(abc.posterior$weights,"weight.am",quote=F,row.names=F,col.names=F)
-write.table(abc.posterior$adj.values,"adjval.am",quote=F,row.names=F)
+abc.posterior <- abc(target  = obs2, 
+    param = M_SC[,param.sc], 
+    sumstat = M_SC[,target.stat], 
+    tol = 0.001, 
+    transf=c(rep("logit",5)), 
+    logit.bounds = bound,  
+    hcorr=T, 
+    method  = "neuralnet", 
+    numnet=50, 
+    sizenet=15)
+
+write.table(abc.posterior$weights,"weight.am",
+    quote=F,
+    row.names=F,
+    col.names=F)
+write.table(abc.posterior$adj.values,"adjval.am",
+    quote=F,
+    row.names=F)
 
 z<-summary(abc.posterior)
 

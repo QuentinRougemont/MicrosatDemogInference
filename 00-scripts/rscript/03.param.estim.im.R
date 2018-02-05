@@ -31,16 +31,41 @@ obs=read.table("target_sumstats.txt", header=T)
 obs2=obs[,-c(1:6,13:18)]
 
 
-abc.posterior <- abc(target  = obs2, param = M_IM[,param.im], sumstat = M_IM[,target.stat], tol = 0.001, transf=c("logit", "logit", "logit", "logit","logit", "logit" ), 
-	logit.bounds = rbind(range(M_IM[, 2]), range(M_IM[, 3]), range(M_IM[, 4]), range(M_IM[, 5]),range(M_IM[, 6]),range(M_IM[, 7])),  hcorr=T, method  = "neuralnet", numnet=50, sizenet=15)
+bound <- NULL
+tmp <- NULL
+for (i in range(param.im)){
+tmp <- range(M_IM[,i])
+bound <- rbind(bound,tmp)
+}
 
-write.table(abc.posterior$weights,"weight.im",quote=F,row.names=F,col.names=F)
-write.table(abc.posterior$adj.values,"adjval.im",quote=F,row.names=F)
+abc.posterior <- abc(target  = obs2, 
+    param = M_IM[,param.im], 
+    sumstat = M_IM[,target.stat], 
+    tol = 0.001, 
+    transf=c(rep("logit",6)), 
+    logit.bounds = bound,  
+    hcorr=T, 
+    method  = "neuralnet", 
+    numnet=50, 
+    sizenet=15)
+
+write.table(abc.posterior$weights,"weight.im",
+    quote=F,
+    row.names=F,
+    col.names=F)
+write.table(abc.posterior$adj.values,"adjval.im",
+    quote=F,
+    row.names=F)
 
 z<-summary(abc.posterior)
 
-write.table(z,"abc.im",col.names=T,row.names=F,quote=F)
-write.table(z[4,],"abc.mean.im",col.names=F,row.names=F,quote=F)
+write.table(z,"abc.im",col.names=T,
+    row.names=F,
+    quote=F)
+write.table(z[4,],"abc.mean.im",
+    col.names=F,
+    row.names=F,
+    quote=F)
 
 #plot graphe
 pdf(file="pior.posterior.im.pdf",width=12,height=8)

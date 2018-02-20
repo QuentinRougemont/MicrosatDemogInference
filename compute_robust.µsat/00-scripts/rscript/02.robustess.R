@@ -1,7 +1,5 @@
 #!/usr/bin/Rscript
 
-#source('/home/ubuntu/abc/01.script/cv4abc.R')
-#source('/home/quentin/script/rscript/cv4abc.R')
 source('00-scripts/rscript/cv4abc.R')
 
 argv<-commandArgs(TRUE)
